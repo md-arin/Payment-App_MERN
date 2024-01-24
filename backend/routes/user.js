@@ -3,7 +3,8 @@ const z = require("zod");
 const jwt = require("jsonwebtoken")
 const { JWT_Secret} = require("../config")
 const router = express.Router();
-const { User } = require("../db/db")
+const { User } = require("../db/db");
+const { authmiddleware } = require("../middlewares/middleware");
 
 //email and pass validation
 const signupInput = z.object({
@@ -63,7 +64,7 @@ router.post("/signup", async (req,res)=>{
     })
 })
 
-router.post("/signin", async(req,res)=>{
+router.post("/signin",authmiddleware, async(req,res)=>{
 
     const succees = siginInput.safeParse(req.body)
     if(!succees){
@@ -94,6 +95,62 @@ router.post("/signin", async(req,res)=>{
         token
     })
 
+})
+
+
+const updateBody = z.object({
+	password: z.string().optional(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+})
+
+router.put("/", authmiddleware, async(req,res)=>{
+    const success = updateBody.safeParse(req.body)
+    if (!success) {
+        res.status(411).json({
+            message: "Error while updating information"
+        })
+    }
+    const userId = req.userId;
+    console.log(userId);
+
+    await User.updateOne(req.body, {
+        _id: userId
+    })
+
+    res.json({
+        msg: "User Updated successfully"
+    })
+    // try {
+    //     const user = await User.findOneAndUpdate(
+    //         {
+    //             _id : userId
+    //         },
+    //         {
+    //             $set: {
+    //                 firstName: firstName,
+    //                 lastName: lastName,
+    //                 password: password
+    //             },
+    //         },
+    //         {
+    //             //by default findoneAndUpdate() return the document as before update was applied
+    //             //using new: true return new obeject updating value
+    //             new: true
+    //         }
+    //     )  
+    //     console.log(user);
+    //     res.status(200).json({
+    //         msg:"User updated successfully!"
+    //     })  
+        
+    // } catch (error) {
+    //     console.log(error);
+    //     res.status(411).json({
+    //         msg: "Error whhile updating information"
+    //     })
+    // }
+   
 })
 
 module.exports = router
