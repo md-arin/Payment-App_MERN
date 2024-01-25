@@ -50,11 +50,13 @@ router.post("/signup", async (req,res)=>{
 
     })
 
+    const username = req.body.username
+
     const userId = user._id;
 
     const token = jwt.sign({
         userId,
-        
+        username      
     }, JWT_Secret);
 
     //if all goes well send the token
@@ -77,6 +79,8 @@ router.post("/signin",authmiddleware, async(req,res)=>{
         username: req.body.username,
         password: req.body.password
     })
+    
+    const username = user.username
 
     if(!user){
         return  res.status(411).json({
@@ -85,9 +89,15 @@ router.post("/signin",authmiddleware, async(req,res)=>{
     }
     const userId = user._id;
 
+    if(user._id != req.userId){
+        return res.status(400).json({
+            msg: "Wrong token provided in the header"
+        })
+    }
+
     const token = jwt.sign({
         userId,
-        username: user.username
+        username
     },JWT_Secret)
 
     res.json({
@@ -112,44 +122,43 @@ router.put("/", authmiddleware, async(req,res)=>{
         })
     }
     const userId = req.userId;
-    console.log(userId);
 
-    await User.updateOne(req.body, {
-        _id: userId
-    })
+    // console.log(userId);
+    // console.log(req.body)
 
-    res.json({
-        msg: "User Updated successfully"
-    })
-    // try {
-    //     const user = await User.findOneAndUpdate(
-    //         {
-    //             _id : userId
-    //         },
-    //         {
-    //             $set: {
-    //                 firstName: firstName,
-    //                 lastName: lastName,
-    //                 password: password
-    //             },
-    //         },
-    //         {
-    //             //by default findoneAndUpdate() return the document as before update was applied
-    //             //using new: true return new obeject updating value
-    //             new: true
-    //         }
-    //     )  
-    //     console.log(user);
-    //     res.status(200).json({
-    //         msg:"User updated successfully!"
-    //     })  
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const password = req.body.password;
+
+    try {
+        const user = await User.findOneAndUpdate(
+            {
+                _id : userId
+            },
+            {
+                $set: {
+                    firstName: firstName,
+                    lastName: lastName,
+                    password: password
+                },
+            },
+            {
+                //by default findoneAndUpdate() return the document as before update was applied
+                //using new: true return new obeject updating value
+                new: true
+            }
+        )  
+        console.log(user);
+        res.status(200).json({
+            msg:"User updated successfully!"
+        })  
         
-    // } catch (error) {
-    //     console.log(error);
-    //     res.status(411).json({
-    //         msg: "Error whhile updating information"
-    //     })
-    // }
+    } catch (error) {
+        console.log(error);
+        res.status(411).json({
+            msg: "Error whhile updating information"
+        })
+    }
    
 })
 
