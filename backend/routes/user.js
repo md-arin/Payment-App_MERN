@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken")
 const { JWT_Secret} = require("../config")
 const router = express.Router();
 const { User, Account } = require("../db/db");
-const { authmiddleware } = require("../middlewares/middleware");
+const { authmiddleware, authcheck } = require("../middlewares/middleware");
 
 //email and pass validation
 const signupInput = z.object({
@@ -51,6 +51,7 @@ router.post("/signup", async (req,res) => {
     })
 
     const username = req.body.username
+    const firstName =req.body.firstName
 
     const userId = user._id;
 
@@ -61,7 +62,8 @@ router.post("/signup", async (req,res) => {
 
     const token = jwt.sign({
         userId,
-        username      
+        username      ,
+        firstName
     }, JWT_Secret);
 
     //if all goes well send the token
@@ -86,6 +88,7 @@ router.post("/signin", async(req,res) => {
     })
     
     const username = user.username
+    const firstName = user.firstName
 
     if(!user){
         return  res.status(411).json({
@@ -102,7 +105,8 @@ router.post("/signin", async(req,res) => {
 
     const token = jwt.sign({
         userId,
-        username
+        username,
+        firstName
     },JWT_Secret)
 
     res.json({
@@ -167,10 +171,13 @@ router.put("/", authmiddleware, async(req,res)=>{
    
 })
 
-router.get("/bulk", async(req,res)=>{
+router.get("/bulk", authcheck, async(req,res)=>{
     const filter = req.query.filter || "";
 
     const users = await User.find({
+        _id: {
+            $ne: req.userId
+        },
         $or: [{
             firstName: {
                 "$regex": filter

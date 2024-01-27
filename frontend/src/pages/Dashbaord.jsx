@@ -7,13 +7,40 @@ import { useNavigate } from 'react-router-dom'
 
 function Dashbaord() {
     const [users,setUsers] = useState([])
+    const [loggedUser, setLoggeduser] = useState({});
+    const [balance, setBalance] = useState();
     const [filter,setFilter] = useState("")
+    const navigate = useNavigate();
 
+    //when the page loads it should check login status via localstorage token
+    useEffect(()=>{
+        if(!localStorage.getItem("token")){
+            alert("Authorization failed, please log in again")
+            navigate("/signin")
+        }
+        const token = localStorage.getItem("token");
+        
+        axios.get("http://localhost:3000/me", {
+            headers: {
+                Authorization: "Bearer " + token
+            }
+        }).then((res)=>{
+            setLoggeduser(res.data.decodedValue)
+            setBalance(res.data.balance)
+        })
+
+    },[])
 
     useEffect(()=>{
-         axios.get("http://localhost:3000/api/v1/user/bulk?filter="+ filter)
+         axios.get("http://localhost:3000/api/v1/user/bulk?filter="+ filter,{
+            headers:{
+                Authorization:"Bearer "+ localStorage.getItem('token')
+            }
+         })
             .then(res => setUsers(res.data.user))
     },[filter])
+
+
 
   return (
     <>
@@ -23,13 +50,19 @@ function Dashbaord() {
             <h1 className='text-3xl text-slate-800 font-semibold'>Payments App</h1>
             </div>
            <div className='flex '>
-           <p className=' m-5'>Hello, user</p>
+           <p className=' m-5'>Hello, {loggedUser.firstName}</p>
             <Avatar />
+            <button onClick={()=>{
+                localStorage.removeItem('token');
+                navigate('/signin')
+            }} className='text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 
+            font-normal rounded-lg text-sm px-5 py-2.5 me-2 mb-2 mx-10 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700
+             dark:border-gray-700'>Logout</button>
            </div>
         </div>
 
         <hr className=' shadow-2xl bg-slate-700 mt-3' />
-        <Balance />
+        <Balance balance={balance} />
 
         <div>
             <h1 className='text-2xl mt-6 font-medium'>Users</h1>

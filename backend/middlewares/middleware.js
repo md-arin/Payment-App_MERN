@@ -17,6 +17,7 @@ function authmiddleware(req,res,next){
         const decodedValue = jwt.verify(actualToken, JWT_Secret);
         
         //putting the userid in request object
+        req.decodedValue = decodedValue;
         req.userId = decodedValue.userId;
         next();
 
@@ -27,8 +28,28 @@ function authmiddleware(req,res,next){
 
 }
 
+function authcheck(req,res,next){
+    const token = req.headers.authorization;
 
+    if(!token || !token.startsWith('Bearer ')){
+        return res.status(403).json({
+            msg: "No token found for user verification"
+        })
+    }
+    const actualToken = token.split(" ")[1];
+    try{
+        const decodedValue = jwt.verify(actualToken, JWT_Secret)
+        req.decodedValue = decodedValue;
+        req.userId = decodedValue.userId;
+        next();
+    } catch(e){
+        console.log(error);
+        return res.status(403).json({})
+    }
+
+}
 
 module.exports = {
-    authmiddleware
+    authmiddleware,
+    authcheck
 }

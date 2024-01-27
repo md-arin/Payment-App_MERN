@@ -1,10 +1,11 @@
 import axios from 'axios';
 import React, { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 function SendMoney() {
     const [searchParams] = useSearchParams();
     const [amount,setAmount] = useState("")
+    const navigate = useNavigate();
 
     const id = searchParams.get("id");
     const name = searchParams.get("name")
@@ -50,6 +51,9 @@ function SendMoney() {
                             Authorization: "Bearer " + localStorage.getItem("token")
                         }
                     })
+                    alert("money sent succesfully")
+                    navigate("/dashboard")
+                    
                 }} class="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white">
                     Initiate Transfer
                 </button>
