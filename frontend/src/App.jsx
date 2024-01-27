@@ -1,8 +1,9 @@
 import { Suspense } from "react"
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom"
-import Dashboard from "./components/Dashboard"
 import SignupPage from "./pages/SignupPage"
 import SignInPage from "./pages/SignInPage"
+import Dashbaord from "./pages/Dashbaord"
+import SendMoney from "./pages/SendMoney"
 
 function App() {
 
@@ -12,8 +13,9 @@ function App() {
         {/* <Appbar /> */}
           <Routes>
               <Route path="/" element={<Suspense fallback={"loading......"}><SignupPage/> </Suspense>}/>
-              <Route path="/dashboard" element={<Suspense fallback={"loading......"}> <Dashboard/> </Suspense>}/>
+              <Route path="/dashboard" element={<Suspense fallback={"loading......"}> <Dashbaord/> </Suspense>}/>
               <Route path="/signin" element={<Suspense fallback={"loading......"}> <SignInPage /> </Suspense>}/>
+              <Route path="/sendmoney" element={<Suspense fallback={"loading......"}> <SendMoney /> </Suspense>}/>
           </Routes>
         </BrowserRouter>
     </div>
