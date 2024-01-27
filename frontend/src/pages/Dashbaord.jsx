@@ -1,9 +1,20 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Balance from '../components/Balance'
 import Avatar from '../components/Avatar'
-import UserList from '../components/UserList'
+import User from '../components/User'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 function Dashbaord() {
+    const [users,setUsers] = useState([])
+    const [filter,setFilter] = useState("")
+
+
+    useEffect(()=>{
+         axios.get("http://localhost:3000/api/v1/user/bulk?filter="+ filter)
+            .then(res => setUsers(res.data.user))
+    },[filter])
+
   return (
     <>
     <div className='mx-10'>
@@ -22,10 +33,10 @@ function Dashbaord() {
 
         <div>
             <h1 className='text-2xl mt-6 font-medium'>Users</h1>
-            <input className=' border border-gray-300 p-2 mt-4 rounded-lg w-full' type="text" placeholder='Search users...' />
-            <UserList username="User1"/>
-            <UserList username="User2" />
-            <UserList username="User3" />
+            <input onChange={e => setFilter(e.target.value)} className=' border border-gray-300 p-2 mt-4 rounded-lg w-full' type="text" placeholder='Search users...' />
+            <div>
+                {users.map(user => <User user={user} />)}
+            </div>
         </div>
     </div>
     </>

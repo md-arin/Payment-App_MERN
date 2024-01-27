@@ -23,7 +23,7 @@ router.get("/test", (req,res)=>{
     res.send("hello world!")
 })
 
-router.post("/signup", async (req,res)=>{
+router.post("/signup", async (req,res) => {
     const success = signupInput.safeParse(req.body)
     if(!success){
         return res.status(411).json({
@@ -71,7 +71,7 @@ router.post("/signup", async (req,res)=>{
     })
 })
 
-router.post("/signin",authmiddleware, async(req,res)=>{
+router.post("/signin", async(req,res) => {
 
     const succees = siginInput.safeParse(req.body)
     if(!succees){
@@ -94,11 +94,11 @@ router.post("/signin",authmiddleware, async(req,res)=>{
     }
     const userId = user._id;
 
-    if(user._id != req.userId){
-        return res.status(400).json({
-            msg: "Wrong token provided in the header"
-        })
-    }
+    // if(user._id != req.userId){
+    //     return res.status(400).json({
+    //         msg: "Wrong token provided in the header"
+    //     })
+    // }
 
     const token = jwt.sign({
         userId,
