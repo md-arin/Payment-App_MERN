@@ -20,7 +20,7 @@ Technologies used for Frontend
 ## How to setup
 1. Clone this repository by running `git clone https://github.com/md-arin/Payment-App_MERN.git`
 
-2. Move into project backend: `cd Payment-App_MERN`
+2. Move into project directory: `cd Payment-App_MERN`
 
 3. Install dependencies with npm : 
 
