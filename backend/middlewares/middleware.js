@@ -43,8 +43,15 @@ function authcheck(req,res,next){
         req.userId = decodedValue.userId;
         next();
     } catch(e){
-        console.log(error);
-        return res.status(403).json({})
+        // if(e.name === 'TokenExpiredError'){
+        //     return res.redirect("http://localhost:5173/")
+        // }
+
+        console.log(e);
+        console.error("Error: ", e)
+        return res.status(403).json({
+            msg: "token expired"
+        })
     }
 
 }

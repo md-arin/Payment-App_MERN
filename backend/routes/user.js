@@ -62,9 +62,9 @@ router.post("/signup", async (req,res) => {
 
     const token = jwt.sign({
         userId,
-        username      ,
+        username,
         firstName
-    }, JWT_Secret);
+    }, JWT_Secret, {expiresIn: 86400});
 
     //if all goes well send the token
     res.json({
@@ -86,7 +86,7 @@ router.post("/signin", async(req,res) => {
         username: req.body.username,
         password: req.body.password
     })
-    
+ 
     const username = user.username
     const firstName = user.firstName
 
@@ -97,17 +97,12 @@ router.post("/signin", async(req,res) => {
     }
     const userId = user._id;
 
-    // if(user._id != req.userId){
-    //     return res.status(400).json({
-    //         msg: "Wrong token provided in the header"
-    //     })
-    // }
 
     const token = jwt.sign({
         userId,
         username,
         firstName
-    },JWT_Secret)
+    },JWT_Secret, {expiresIn: 86400})
 
     res.json({
         msg: "login Succesfull",
