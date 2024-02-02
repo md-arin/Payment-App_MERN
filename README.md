@@ -28,8 +28,10 @@ Technologies used for Frontend
 
     - for frontend : `cd frontend` then `npm install`
 
+4. Make sure you have a MongoDB instance in your device, if not then create one and change the URL at `backend/db/db.js`
 
-4. Move to the backend  folder and start server using nodemon: `nodemon index.js` 
+5. Move to the backend  folder and start server using nodemon: `nodemon index.js` 
 
-5.  Now move to the frontend folder and start the react app: `npm run dev`
-6. Open http://localhost:5173 in your browser to see the application
+6.  Now move to the frontend folder and start the react app: `npm run dev`
+
+7. Open http://localhost:5173 in your browser to see the application

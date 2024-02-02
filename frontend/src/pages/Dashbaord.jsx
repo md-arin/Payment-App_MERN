@@ -49,10 +49,10 @@ function Dashbaord() {
 
   return (
     <>
-    <div className='mx-10'>
-        <div className='flex justify-between mt-4'>
+    <div className='mx-10 '>
+        <div className='flex justify-between mt-4 '>
             <div>
-            <h1 className='text-3xl text-slate-800 font-semibold'>Payments App</h1>
+            <h1 className='text-3xl text-slate-800 font-semibold'>EduWallet</h1>
             </div>
            <div className='flex '>
            <p className=' m-5'>Hello, { loggedUser && loggedUser.firstName ? loggedUser.firstName : "Guest"}</p>

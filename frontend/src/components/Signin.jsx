@@ -31,7 +31,7 @@ function Signin() {
         navigate("/dashboard")
       }} className='p-4 px-20 bg-green-700 hover:bg-green-900 text-white rounded-md'>Sign In</button>
 
-      <p className=' m-1'>Dont have an account? <Link to="/" className='underline'> Sign Up </Link></p>
+      <p className=' m-1'>Dont have an account? <Link to="/signup " className='underline'> Sign Up </Link></p>
     </div>
   )
 }
